@@ -1,0 +1,180 @@
+<script src="/static/admin/js/jquery.pagination.js"></script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+    //权限按钮控制
+    var noOperations = JSON.parse('{{.noOperations}}');
+    deleteNoPermissionButton();
+    console.log(noOperations);
+    
+    var currentPage = 1;
+    var dataList = [];
+    $('.m-style').pagination({
+                    pageCount:0,
+                    current: 1,
+                    prevContent: "上一页",
+                    nextContent: "下一页",
+                    jump: true,
+                    callback: function (api) {
+                        console.log(api.getCurrent())
+                        getList(api.getCurrent() )
+                    }
+    });
+
+    //获取列表
+    $(function(){
+        getList(1 )
+    });
+
+    //添加员工
+    function applyLeave(){
+        location.href = "/admin/leaveapply/showadd";
+    }
+
+    function getList(page =1 ) {
+        currentPage = page;
+        $.ajax({
+            type : "POST",
+            url : "/admin/leaveapply/getshowlist",
+            data : { "page" : page },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+                console.log(result);
+                if ( result.Code == 000 ){
+                  if(result.Data.length ==  0) {
+                    $("#list-body").html('<tr ><td colspan="5" class="center" style="color: dimgray">暂无申请数据</td></tr> ');
+                  } else { //有数据
+                    dataList =  result.Data;
+                    var list = '';
+                    for (let index = 0; index < result.Data.length; index++) {
+                        console.log(11111);
+                        let item = result.Data[index];
+                        list += '<tr>';
+                        list += '    <td class="center">'+item['Id']+'</td>';
+                        list += '    <td class="center">'+item['LeaveTypeName']+'</td>';
+                        list += '    <td class="center">'+item['StartTime']+'～'+item['EndTime']+'</td>';
+
+                        switch(item['Status']) {
+                            case 'pending':
+                                list += '<td class="center"><span class="label label-sm label-info arrowed-in-right arrowed">待审核</span></td>';
+                                break;
+                            case 'agree':
+                                list += '<td class="center"><span class="label label-sm label-success arrowed-in-right arrowed">已通过</span></td>';
+                                break;
+                            case 'cancel':
+                                list += '<td class="center"><span class="label label-sm label-warning arrowed-in-right arrowed">已取消</span></td>';
+                                break;
+                            case 'reject':
+                                list += '<td class="center"><span class="label label-sm label-danger arrowed-in-right arrowed">已拒绝</span></td>';
+                                break;
+                            default:
+                                list += '<td class="center"><span class="label label-sm arrowed-in-right arrowed">未知</span></td>';
+                                break;
+                        }
+                        
+                        list += '    <td class="center">';
+                        list += '        <button class="btn btn-white btn-info btn-round" onclick="showDetail('+index+')">';
+                        list += '            <i class="ace-icon fa fa-eye bigger-110 blue"></i>';
+                        list += '            查看详情';
+                        list += '        </button>';
+                        if(item['Status'] == 'pending') {
+                            list += '        <button class="btn btn-white btn-warning btn-round permission-cancel" onclick="cancelLeave(\''+item['Id']+'\')">';
+                            list += '                <i class="ace-icon fa fa-certificate bigger-110 orange"></i>';
+                            list += '                取消申请';
+                            list += '        </button>';
+                        }
+                        list += '    </td>';
+                        list += '</tr>';
+                        
+                    }
+                   // console.log(list);
+                    $("#list-body").html(list);
+
+                    $('.m-style').pagination({
+                        pageCount:result.CountPage,
+                        current:page,
+                        prevContent: "上一页",
+                        nextContent: "下一页",
+                        jump: true,
+                        callback: function (api) {
+                            console.log(api.getCurrent())
+                            getList(api.getCurrent() );
+                        }
+                    });
+                  }
+
+                  
+                deleteNoPermissionButton();
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+
+    }
+    //查看详情
+    function showDetail(idx){
+        let item = dataList[idx];
+        console.log(item);
+        $("#show-type").html(item['LeaveTypeName']);
+        var status_str = ''
+        switch(item['Status']) {
+                case 'pending':
+                status_str= '<span class="label label-sm label-info arrowed-in-right arrowed">待审核</span>';
+                    break;
+                case 'agree':
+                status_str = '<span class="label label-sm label-success arrowed-in-right arrowed">已通过</span>';
+                    break;
+                case 'cancel':
+                status_str = '<span class="label label-sm label-warning arrowed-in-right arrowed">已取消</span>';
+                    break;
+                case 'reject':
+                status_str = '<span class="label label-sm label-danger arrowed-in-right arrowed">已拒绝</span>';
+                    break;
+                default:
+                status_str = '<span class="label label-sm arrowed-in-right arrowed">未知</span>';
+                    break;
+            }
+        $("#show-status").html(status_str);
+        var time_str = item['StartTime']+' ~ '+item['EndTime'];
+        $("#show-apply-time").html(time_str);
+        $("#show-apply-reason").html(item['ApplyReason']);
+        $("#show-approver").html(item['ApproveStaffName']);
+        $("#show-approve-reason").html(item['ApproveReason'] ? item['ApproveReason']: '/');
+
+        $("#showDetail").modal("show")
+    }
+
+    //
+    function cancelLeave(id) {
+        $.ajax({
+            type : "POST",
+            url : "/admin/leaveapply/cancel",
+            data : { "id" : id },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+
+                if ( result.Code == 000 ){
+                    toastr.success(result.Message);
+
+                    setTimeout(function () {
+                        location.reload(); 
+                    },2000);	
+
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,337 @@
+<script src="/static/admin/js/jquery.pagination.js"></script>
+       
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+    //权限按钮控制
+    var noOperations = JSON.parse('{{.noOperations}}');
+    deleteNoPermissionButton();
+
+    var currentPage = 1;
+    var roleInfo = JSON.parse('{{.roleInfo}}');
+    var roleList = [];
+    console.log(roleInfo);
+    $('.m-style').pagination({
+                    pageCount:0,
+                    current: 1,
+                    prevContent: "上一页",
+                    nextContent: "下一页",
+                    jump: true,
+                    callback: function (api) {
+                        console.log(api.getCurrent())
+                        getStaffList(api.getCurrent() )
+                    }
+    });
+
+    //获取列表
+    $(function(){
+        getStaffList(1)
+    });
+
+    function getStaffList(page =1 ) {
+        currentPage = page;
+        $.ajax({
+            type : "POST",
+            url : "/admin/staffmanage/getstafflist",
+            data : { "page" : page },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+                console.log(result);
+                if ( result.Code == 000 ){
+                  if(result.Data.length ==  0) {
+                    $("#list-body").html('<tr ><td colspan="8" class="center" style="color: dimgray">暂无员工数据</td></tr> ');
+                  } else { //有数据
+                    roleList =  result.Data;
+                    var list = '';
+                    for (let index = 0; index < result.Data.length; index++) {
+                        console.log(11111);
+                        let item = result.Data[index];
+                        list += '<tr>';
+                        list += '    <td class="center">'+item['Id']+'</td>';
+                        list += '    <td class="center">'+item['Name']+'</td>';
+                        list += '    <td class="center">'+item['Title']+'</td>';
+                        if(item['Phone']) {
+                            list += '    <td class="center">'+item['Phone']+'</td>';
+                        } else {
+                            list += '    <td class="center">/</td>';
+                        }
+                        list += '    <td class="center">'+item['Phone']?item['Phone']:'/'+'</td>';
+                        if (roleInfo[item['RoleId']] != undefined) {
+                            list += '    <td class="center">'+roleInfo[item['RoleId']].name+'</td>';
+                        } else {
+                            list += '    <td class="center">/</td>'; 
+                        }
+                        if(item['IsFreeze'] == '1'){
+                            list += '    <td class="center">已冻结</td>';
+                        }else{
+                           list += '    <td class="center">正常</td>';
+                        }
+
+                        if(item['IsApprover'] == '1'){
+                            list += '<td class="center"><i class="ace-icon fa fa-check bigger-125 green"></i></td>';
+                        }else {
+                            list += '<td class="center"><i class="ace-icon fa fa-times bigger-125 grey"></i></td>';
+                        }
+                       // list += '<td>是</td>';
+                        // list += '    <td class="center">';
+                        // list += '        <label>';
+                        // list += '            <input name="switch-field-1" '+ item['IsApprover'] == 1 ? 'checked' : ''+' class="ace ace-switch ace-switch-4 btn-empty" type="checkbox">';
+                        // list += '            <span class="lbl"></span>';
+                        // list += '        </label>';
+                        // list += '    </td>';
+                        list += '    <td class="center">';
+                        list += '        <button class="btn btn-white btn-yellow btn-round" onclick="showStaff('+index+')">';
+                        list += '            <i class="ace-icon fa fa-eye bigger-110 yellow"></i>';
+                        list += '            查看详情';
+                        list += '        </button>';
+                        list += '        <button class="btn btn-white btn-success  btn-round permission-modify" onclick="modifyStaffRole(\''+item['Id']+'\',\''+item['RoleId']+'\')">';
+                        list += '                <i class="ace-icon fa fa-pencil bigger-110 green"></i>';
+                        list += '                修改角色';
+                        list += '            </button>';
+                        if(item['IsFreeze'] == '1') {
+                            list += '        <button class="btn btn-white btn-info btn-round permission-freeze" onclick="isFreeze(\''+item['Id']+'\',\'unfreeze\')">';
+                            list += '                <i class="ace-icon fa fa-certificate bigger-110 blue"></i>';
+                            list += '                解冻员工';
+                            list += '        </button>';
+                        } else {
+                            list += '        <button class="btn btn-white btn-info btn-round permission-freeze" onclick="isFreeze(\''+item['Id']+'\',\'freeze\')">';
+                            list += '                <i class="ace-icon fa fa-certificate bigger-110 blue"></i>';
+                            list += '                冻结员工';
+                            list += '        </button>';
+                        }
+                        if(item['IsApprover'] == '1') {
+                            list += '        <button class="btn btn-white btn-default btn-round permission-set" onclick="isApprover(\''+item['Id']+'\',\'cancel\')">';
+                            list += '                <i class="ace-icon fa fa-cog bigger-110 "></i>';
+                            list += '                取消审核人';
+                            list += '        </button>';
+                        } else {
+                            list += '        <button class="btn btn-white btn-default btn-round permission-set" onclick="isApprover(\''+item['Id']+'\',\'confirm\')">';
+                            list += '                <i class="ace-icon fa fa-cog bigger-110 "></i>';
+                            list += '               设为审核人';
+                            list += '        </button>';
+                        }
+                        
+                        list += '        <button class="btn btn-white btn-danger  btn-round permission-delete" data-toggle="modal" onclick="deleteStaff(\''+item['Id']+'\')">';
+                        list += '            <i class="ace-icon fa fa-trash-o bigger-110 red"></i>';
+                        list += '            删除员工';
+                        list += '        </button> ';
+                        list += '        ';
+                        list += '            ';
+                        list += '    </td>';
+                        list += '</tr>';
+                        
+                    }
+                   // console.log(list);
+                    $("#list-body").html(list);
+
+                    $('.m-style').pagination({
+                        pageCount:result.CountPage,
+                        current:page,
+                        prevContent: "上一页",
+                        nextContent: "下一页",
+                        jump: true,
+                        callback: function (api) {
+                            console.log(api.getCurrent())
+                            getStaffList(api.getCurrent() );
+                        }
+                    });
+                  }
+                //权限按钮控制
+                deleteNoPermissionButton();
+                  
+
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+
+    }
+
+    //添加员工
+    function addStaff(){
+        location.href = "/admin/staffmanage/showaddstaff";
+    }
+
+    //查看详情
+    function showStaff(idx){
+        let item = roleList[idx];
+        console.log(item);
+        $("#show-id").html(item['Id']);
+        $("#show-name").html(item['Name']);
+        $("#show-title").html(item['Title']);
+        if (roleInfo[item['RoleId']] != undefined) {
+            $("#show-role").html(roleInfo[item['RoleId']].name);
+         } 
+        $("#show-gender").html(item['Gender'] == '1' ? '男' : '女');
+        $("#show-address").html(item['Address']);
+        $("#show-phone").html(item['Phone']);
+        $("#show-email").html(item['Email']);
+        $("#show-add-time").html(item['AddTime']);
+        $("#showDetail").modal("show")
+    }
+    //删除
+    function deleteStaff(id){
+        $("#delId").val(id);
+        $("#deleteModal").modal("show");
+    }
+    //确认删除
+    function confirmDel(){
+        var id = $("#delId").val();
+        
+        if(id == ''){
+            console.log('id:'+id);
+            toastr.warning("删除员工出错，请重新操作");
+            return false;
+        }
+        console.log(id);
+        $.ajax({
+            type : "POST",
+            url : "/admin/staffmanage/delstaff",
+            data : { "id" : id },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+                console.log(result);
+                $("#delId").val('');
+                $("#deleteModal").modal("hide");
+                if ( result.Code == 000 ){
+                    toastr.success("删除成功");
+
+                    setTimeout(function () {
+                        location.reload(); 
+                    },2000);	
+
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                $("#delId").val('');
+                $("#deleteModal").modal("hide");
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+
+    }
+
+    var modifyInfo = {
+        id : '',
+        role_id : '',
+    }
+    //修改角色
+    function modifyStaffRole(id,role_id){
+            modifyInfo.id = id;
+            modifyInfo.role_id = role_id;
+
+            let select_html = '';
+            for(let key in roleInfo) {
+                if(key == role_id) {
+                    select_html += ' <option selected="selected" value="'+key+'">'+roleInfo[key].name+'</option>'
+                }else {
+                    select_html += ' <option value="'+key+'">'+roleInfo[key].name+'</option>'
+                }
+            }
+            $(".modifyclass") .html(select_html);
+            $("#modifyRoleModal").modal("show");
+    }
+    //二次确认
+    function confirmModifyRole(){
+        var role_id = $(".modifyclass option:checked").val();
+        if(modifyInfo.role_id == role_id) {
+            $("#modifyRoleModal").modal("hide");
+            toastr.success("修改成功")
+            return true;
+        }
+
+        $.ajax({
+            type : "POST",
+            url : "/admin/staffmanage/modifystaffrole",
+            data : { "id" : modifyInfo.id, "role_id":role_id },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+
+                $("#modifyRoleModal").modal("hide");
+                if ( result.Code == 000 ){
+                    toastr.success("修改成功");
+
+                    setTimeout(function () {
+                        location.reload(); 
+                    },2000);	
+
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                $("#modifyRoleModal").modal("hide");
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+
+    }
+
+    //冻结员工
+    function isFreeze(id,type) {
+        $.ajax({
+            type : "POST",
+            url : "/admin/staffmanage/isfreeze",
+            data : { "id" : id, "type":type },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+
+                if ( result.Code == 000 ){
+                    toastr.success(result.Message);
+
+                    setTimeout(function () {
+                        location.reload(); 
+                    },2000);	
+
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+    }
+
+    //
+    function isApprover(id,type) {
+        $.ajax({
+            type : "POST",
+            url : "/admin/staffmanage/isapprover",
+            data : { "id" : id, "type":type },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+
+                if ( result.Code == 000 ){
+                    toastr.success(result.Message);
+
+                    setTimeout(function () {
+                        location.reload(); 
+                    },2000);	
+
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+    }
+
+</script>

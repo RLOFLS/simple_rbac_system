@@ -1,0 +1,70 @@
+.jarea-select-box {
+  border: 1px solid #dddddd;
+  padding: 10px;
+  position: absolute; }
+  .jarea-select-box a {
+    font: 700 15px/30px 'microsoft yahei';
+    color: #cc0000; }
+  .jarea-select-box .tab-ul {
+    padding: 0;
+    margin: 0;
+    clear: both;
+    word-spacing: 0px;
+    font-size: 0; }
+    .jarea-select-box .tab-ul .tab-item {
+      list-style: none;
+      display: inline-block;
+      padding: 0px 5px;
+      margin: 0px 2px;
+      border: 1px solid #dddddd;
+      border-bottom: none; }
+      .jarea-select-box .tab-ul .tab-item a {
+        text-decoration: none; }
+    .jarea-select-box .tab-ul .tab-item.active {
+      border: 2px solid #edd28b;
+      border-bottom: none;
+      position: relative;
+      top: 2px;
+      background-color: #ffffff;
+      z-index: 10; }
+      .jarea-select-box .tab-ul .tab-item.active a {
+        color: #000000; }
+  .jarea-select-box .tab-content {
+    border-top: 2px solid #edd28b;
+    width: 400px; }
+    .jarea-select-box .tab-content .tab-panel ul {
+      margin: 0;
+      padding: 5px 0px;
+      overflow: hidden;
+      clear: both; }
+      .jarea-select-box .tab-content .tab-panel ul li {
+        list-style: none;
+        float: left;
+        padding: 1px 5px; }
+        .jarea-select-box .tab-content .tab-panel ul li a {
+          font: 14px/150% Arial,Verdana,"\5b8b\4f53";
+          text-decoration: none;
+          display: inline-block;
+          padding: 2px 5px; }
+          .jarea-select-box .tab-content .tab-panel ul li a:hover {
+            background-color: #cc0000;
+            color: #ffffff; }
+    .jarea-select-box .tab-content .active {
+      display: block; }
+  .jarea-select-box .close-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 25px;
+    text-align: center;
+    background-color: #F1F1F1;
+    height: 25px;
+    line-height: 22px;
+    border-radius: 25px;
+    font-size: 16px;
+    color: #333333; }
+    .jarea-select-box .close-btn:hover {
+      text-decoration: none;
+      background-color: #e1e1e1; }
+
+/*# sourceMappingURL=jareaselect2.css.map */

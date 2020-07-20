@@ -1,0 +1,120 @@
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon green"></i>
+								<a href="/admin/jump/welcome">Home</a>
+							</li>
+							<li class="active">{{.title}}</li>
+						</ul><!-- /.breadcrumb -->
+
+					</div>
+
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+                                <!-- PAGE CONTENT BEGINS -->
+                                <div class="row">
+                                        <div class="col-xs-12">
+                                                <h3 class="header smaller lighter blue">办公室申请
+                                                    <button class="btn btn-white btn-info btn-round permission-apply" style="float: right" onclick="applyOffice()">
+                                                        <i class="ace-icon glyphicon glyphicon-plus bigger-110 blue"></i>
+                                                        预约办公室
+                                                    </button></h3>
+                                            <table id="role-table" class="table  table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th  class="center">编号</th>
+                                                        <th  class="center">办公室</th>
+                                                        <th  class="center">预约时间</th>
+                                                        <th  class="center">状态</th>
+                                                        <th class="center">操作</th>
+                                                    </tr>
+                                                </thead>
+    
+                                                <tbody id = "list-body">
+                                                  
+                         
+                                                    <tr ><td colspan="5" class="center" style="color: dimgray">暂无预约数据</td></tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="m-style" id="m-style">
+
+                                            </div>
+                                        </div><!-- /.span -->
+                                    </div>
+							
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+        
+        <!--查看详情-->
+        <div class="modal fade" id="showDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header"  style="background-color: #EFF3F8; padding: 7px;">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">预约详情</h4>
+                    </div>
+                    <div class="modal-body">
+                            <div class="profile-user-info profile-user-info-striped">
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 办公室</div>
+
+                                        <div class="profile-info-value">
+                                            <span class="editable editable-click" id="show-type"></span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                            <div class="profile-info-name"> 状态</div>
+    
+                                            <div class="profile-info-value">
+                                                <span class="editable editable-click" id="show-status"></span>
+                                            </div>
+                                        </div>
+                                    <div class="profile-info-row">
+                                            <div class="profile-info-name"> 预约时间</div>
+    
+                                            <div class="profile-info-value">
+                                                <span class="editable editable-click" id="show-apply-time"></span>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                                <div class="profile-info-name"> 预约理由</div>
+        
+                                                <div class="profile-info-value">
+                                                    <span class="editable editable-click" id="show-apply-reason"></span>
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                    <div class="profile-info-name"> 审核人</div>
+            
+                                                    <div class="profile-info-value">
+                                                        <span class="editable editable-click" id="show-approver"></span>
+                                                    </div>
+                                                </div>
+                                                <div class="profile-info-row">
+                                                        <div class="profile-info-name"> 审核原因</div>
+                
+                                                        <div class="profile-info-value">
+                                                            <span class="editable editable-click" id="show-approve-reason"></span>
+                                                        </div>
+                                                    </div>
+                                </div>
+                    </div>
+                    <div class="modal-footer"  style="padding-bottom: 7px; padding-top: 7px;">
+                      <button type="button" class="btn  btn-white btn-default btn-round" data-dismiss="modal"><i class="ace-icon fa fa-times"></i>关闭</button>
+                    </div>
+                  </div>
+                </div>
+              </div>

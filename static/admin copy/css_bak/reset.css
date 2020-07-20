@@ -1,0 +1,46 @@
+body {
+ /*
+* Utilities
+*/ }
+  body #st-preloader {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 999999;
+    display: block;
+    background: #fff; }
+  body #st-preloader .st-preloader-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.65);
+    border-right-color: rgba(0, 0, 0, 0.15);
+    border-bottom-color: rgba(0, 0, 0, 0.15);
+    -webkit-animation: tb-preloader-circle 0.8s linear infinite;
+    animation: tb-preloader-circle 0.8s linear infinite; }
+@keyframes tb-preloader-circle {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg); } }
+@-webkit-keyframes tb-preloader-circle {
+  from {
+    -webkit-transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(360deg); } }
+  body .dropdown-menu .dropdown-item:focus {
+    background-color: #17a2b8; }
+  body .border-top {
+    border-top: 1px solid #e5e5e5; }
+  body .border-bottom {
+    border-bottom: 1px solid #e5e5e5; }
+
+/*# sourceMappingURL=reset.css.map */

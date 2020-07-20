@@ -1,0 +1,109 @@
+<!-- <script src="/static/admin/js/tree.min.js"></script> -->
+<script src="/static/admin/js/mytree.js"></script>
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+    //$("input[name='form-field-radio']:checked").val()
+    //$("option:checked").val()
+    //返回
+    function goBack(){
+        location.href = "/admin/staffmanage/showlist"
+    }
+
+    //添加角色
+    function addStaff(){
+        
+        var id = $("#staff_id").val();
+        if (! id) {
+            toastr.warning("请填写员工编号");
+            return false;
+        }
+        
+        var password = $("#staff_password").val();
+        if(!password) {
+            toastr.warning("请填写密码");
+            return false
+        }
+        var name = $("#staff_name").val();
+        if(!name) {
+            toastr.warning("请填写姓名");
+            return false
+        }
+        var gender = $("input[name='form-field-radio']:checked").val();
+        if(gender == undefined) {
+            toastr.warning("请选择性别");
+            return false
+        }
+        var phone = $("#staff_phone").val();
+        if(!phone) {
+            toastr.warning("请填写电话");
+            return false
+        }
+        var address = $("#staff_address").val();
+        if(!address) {
+            toastr.warning("请填写地址");
+            return false
+        }
+        var email = $("#staff_email").val();
+        if(!email) {
+            toastr.warning("请填写邮箱");
+            return false
+        }
+        var title = $("#staff_title").val();
+        if(!title) {
+            toastr.warning("请填写头衔");
+            return false
+        }
+        var role_id = $("option:checked").val();
+        if(role_id == undefined) {
+            toastr.warning("请选择角色");
+            return false
+        }
+        var approver = $("input[name='form-field-radio2']:checked").val()
+        if(!approver) {
+            toastr.warning("请选择是否为审核人");
+            return false
+        }
+
+        //数据
+        var ajax_data = {
+            'id' : id,
+            'name' : name,
+            'password' : password,
+            'gender' : gender,
+            'phone' : phone,
+            'address' : address,
+            'email' : email,
+            'title' : title,
+            'role_id' : role_id,
+            'is_approver' : approver,
+        };
+
+        $.ajax({
+            type : "POST",
+            url : "/admin/staffmanage/addstaff",
+            data : ajax_data,
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+                console.log(result);
+                if ( result.Code == 000 ){
+                    toastr.success(result.Message);
+
+                    setTimeout(function () {
+                        location.href = "/admin/staffmanage/showlist"
+                    },2000);	
+                    
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+
+
+    }
+    
+</script>

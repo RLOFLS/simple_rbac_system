@@ -1,0 +1,41 @@
+<div class="footer">
+        <div class="footer-inner">
+            <div class="footer-content">
+                <span class="bigger-120">
+                    <span class="blue bolder">GO OA</span>
+                    系统 &copy; 2020
+                </span>
+            </div>
+        </div>
+    </div>
+
+<div id="modifyPasswordModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+            <div class="modal-header" style="background-color: #EFF3F8; padding: 7px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="ace-icon fa fa-key blue"></i><span class="blue">修改密码</span></h4>
+            </div>
+            <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right"> 新密码： </label>	
+                                <div class="col-xs-4">
+                                        <input type="text" id="newPassword" placeholder="密码">
+                                </div>
+                            </div>
+                </form>
+                    
+            </div>
+            <div class="modal-footer" style="padding-bottom: 7px; padding-top: 7px;">
+                <button class="btn btn-white btn-default btn-round" data-dismiss="modal">
+                    <i class="ace-icon fa fa-times "></i>
+                    取消
+                </button> 
+                <button type="button" class="btn btn-white btn-primary  btn-round" onclick="confirmModifyPassword()"> 
+                <i class="ace-icon  fa fa-check "></i>确认
+            </button>
+            </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->

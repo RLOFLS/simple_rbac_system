@@ -1,0 +1,121 @@
+
+		<!-- ace scripts -->
+
+		<script src="/static/admin/js/jquery.pagination.js"></script>
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+		
+				//获取公告
+				var currentPage = 1;
+            $('.m-style').pagination({
+                            pageCount:0,
+                            current: 1,
+                            prevContent: "上一页",
+                            nextContent: "下一页",
+                            jump: true,
+                            callback: function (api) {
+                                console.log(api.getCurrent())
+                                getBulletinList(api.getCurrent() )
+                            }
+            });
+
+            //获取列表
+            $(function(){
+                getBulletinList(1 )
+            });
+
+            function getBulletinList(page =1 ) {
+                currentPage = page;
+                $.ajax({
+					type : "POST",
+					url : "/admin/home/getbulletinlist",
+					data : { "page" : page },
+					dataType: "json",
+					//请求成功
+					success : function(result) {
+                        console.log(result);
+						if ( result.Code == 000 ){
+                          if(result.Data.length ==  0) {
+                            $("#list-body").html('<tr ><td colspan="8" class="center" style="color: dimgray">暂无公告数据</td></tr> ');
+                          } else { //有数据
+                            roleList =  result.Data;
+                            var list = '';
+                            for (let index = 0; index < result.Data.length; index++) {
+                                console.log(11111);
+                                let item = result.Data[index];
+                                list += '<div class="timeline-item clearfix">';
+								list += ' <div class="timeline-info">';
+								list += '<span class="timeline-date">'+item['AddTime']+'</span>';
+								list += '<i class="timeline-indicator btn btn-info no-hover"></i>';
+								list += '</div>';
+								list += '<div class="widget-box transparent">';
+								list += '<div class="widget-body">';
+								list += ' <div class="widget-main no-padding">';
+								list += '<span class="bigger-130">';
+								list += '<span class="grey" style="margin-right: 20px;font-size: 14px;">'+item['Author']+'</span><span class ="blue bolder">'+item['Title']+'</span>';
+								list += '<br>';
+								list += '<i class="ace-icon fa fa-hand-o-right  bigger-125 orange"></i>';
+								list += '<a href="javascript:;" onclick="showBulletion('+item['Id']+')"><small class="orange" style="font-size: 14px;">查看详情</small></a>';
+								list += '</div>';
+								list += '</div>';
+								list += '</div>';
+								list += '</div>';
+                                
+                            }
+                           // console.log(list);
+                            $(".timeline-items").html(list);
+
+                            $('.m-style').pagination({
+                                pageCount:result.CountPage,
+                                current:page,
+                                prevContent: "上一页",
+                                nextContent: "下一页",
+                                jump: true,
+                                callback: function (api) {
+                                    console.log(api.getCurrent())
+                                    getBulletinList(api.getCurrent() );
+                                }
+                            });
+                          }
+						}else{
+                            toastr.error(result.Message);
+                        }
+					},
+					//请求失败，包含具体的错误信息
+					error : function(e){
+						toastr.error("系统繁忙，请稍候再试");
+					}
+				});
+
+			}
+			
+			//查看详情
+            function showBulletion(id){
+                $.ajax({
+					type : "POST",
+					url : "/admin/home/getbulletindetail",
+					data : { "id" : id },
+					dataType: "json",
+					//请求成功
+					success : function(result) {
+                        console.log(result);
+                      
+						if ( result.Code == 000 ){
+                            $("#show-title").html(result.Data.Title);
+                            $("#show-author").html(result.Data.Author);
+                            $("#show-time").html(result.Data.AddTime);
+                            $("#show-content").html(result.Data.Content);                       
+                            $("#showDetail").modal("show")
+						}else{
+                            toastr.error(result.Message);
+                        }
+					},
+					//请求失败，包含具体的错误信息
+					error : function(e){
+						toastr.error("系统繁忙，请稍候再试");
+					}
+				});
+               
+            }
+		</script>

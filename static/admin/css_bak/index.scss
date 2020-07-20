@@ -1,0 +1,158 @@
+body {
+
+  /*
+ * Sidebar
+ */
+  .sidebar {
+    position: fixed;
+    top: 0px;
+    bottom: 0;
+    left: 0;
+    z-index: 100; /* Behind the navbar */
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+
+    .sidebar-sticky {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 48px; /* Height of navbar */
+      height: calc(100vh - 48px);
+      padding-top: .5rem;
+      overflow-x: hidden;
+      overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+
+      .sidebar-heading {
+        font-size: 1rem;
+        padding: .75rem 1rem;
+        cursor: pointer;
+      }
+
+      .nav {
+        display: none;
+
+        .nav-item {
+
+          .nav-link {
+            cursor: pointer;
+            font-size: 1rem;
+            padding: .5rem 1rem;
+            font-weight: 500;
+            color: #333333;
+            border-left: 5px solid #FFFFFF;
+
+            &:hover {
+              color: #17a2b8;
+              border-left-color: #17a2b8;
+            }
+          }
+          .nav-link.active {
+            color: #17a2b8;
+            background-color: #f1f1f1;
+            border-left-color: #17a2b8;
+          }
+        }
+      }
+    }
+
+  }
+
+  .main {
+    margin-top: 3.4rem;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+
+    .tab-box {
+      .tab-title {
+        background-color: #f1f1f1;
+        transition: all .2s;
+        -webkit-transition: all .2s;
+        padding: 0;
+        font-size: 14px;
+        clear: both;
+        zoom: 1; overflow: hidden;
+        margin: 0;
+
+        li {
+          float: left;
+          font-weight: bold;
+          list-style: none;
+          padding: 0px 12px;
+          cursor: pointer;
+          height: 36px;
+          line-height: 36px;
+
+          .oi-reload {
+            font-weight: bolder;
+            font-size: 16px;
+          }
+
+          .oi-circle-x {
+            margin-left: 10px;
+            border-radius: 50%;
+            &:hover {
+              color: #FF5722;
+              background-color: #ffffff;
+            }
+          }
+        }
+        li.active {
+          background-color: #17a2b8;
+          color: #ffffff;
+        }
+      }
+      .tab-content {
+        position: relative;
+
+        .tab-item {
+          display: none;
+
+          .x-iframe{
+            position:absolute;
+            height:100%;
+            width: 100%;
+            border:none;
+          }
+        }// tab-item
+
+        .tab-item.show {
+          display: block !important;
+          animation:moveTop 1s;
+          -webkit-animation:moveTop 1s;
+          animation-fill-mode:both;
+          -webkit-animation-fill-mode:both;
+          position:relative; height:100%;
+          -webkit-overflow-scrolling: touch;
+          overflow:auto;
+        }
+      }
+    } // end menu-tab
+  } // end main
+
+  .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background-color: #343a40;
+  }
+
+  /*打开页面动画*/
+  @keyframes moveTop{
+    0% {opacity: 0;-webkit-transform: translateY(20px);-ms-transform: translateY(20px);transform: translateY(20px);}
+    100% {opacity: 1;-webkit-transform: translateY(0);-ms-transform: translateY(0);transform: translateY(0);}
+  }
+  @-o-keyframes moveTop{
+    0% {opacity: 0;-webkit-transform: translateY(20px);-ms-transform: translateY(20px);transform: translateY(20px);}
+    100% {opacity: 1;-webkit-transform: translateY(0);-ms-transform: translateY(0);transform: translateY(0);}
+  }
+  @-moz-keyframes moveTop{
+    0% {opacity: 0;-webkit-transform: translateY(20px);-ms-transform: translateY(20px);transform: translateY(20px);}
+    100% {opacity: 1;-webkit-transform: translateY(0);-ms-transform: translateY(0);transform: translateY(0);}
+  }
+  @-webkit-keyframes moveTop{
+    0% {opacity: 0;-webkit-transform: translateY(20px);-ms-transform: translateY(20px);transform: translateY(20px);}
+    100% {opacity: 1;-webkit-transform: translateY(0);-ms-transform: translateY(0);transform: translateY(0);}
+  }
+}

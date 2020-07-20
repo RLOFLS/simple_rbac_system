@@ -1,0 +1,119 @@
+
+        <!-- page specific plugin scripts -->
+        <!-- <script src="/static/admin/js/tree.min.js"></script> -->
+        <script src="/static/admin/js/mytree.js"></script>
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+            var roleId = '{{.roleId}}';
+            $(function(){ //初始化树
+                $("#roleName").val('{{.roleName}}');
+                var roleMenu = '';
+                roleMenu = JSON.parse('{{.roleMenu}}');
+                console.log(roleMenu);
+
+                if (roleMenu) {
+                    for(let key  in roleMenu){
+                            var item = $("li[data-code="+key+"]");
+                            if (myTree.isFolder(item)) {
+                                myTree.fchangeOpenStatus(item);
+                            }else {
+                                myTree.open(item);
+                            }
+                   
+                            if(roleMenu[key].length > 0) {
+                                roleMenu[key].forEach((item2,index,array)=>{
+                                
+                                     var opitem = $("li[data-code="+key+"-"+item2+"]");
+                                    myTree.open(opitem);
+                                })
+                            }
+                    }
+                }
+
+            });
+			//返回
+			function goBack(){
+				location.href = "/admin/permissionmanage/showrolelist"
+			}
+
+			//添加角色
+			function modifyRole(){
+				
+				$roleName = $("#roleName").val();
+				
+				if($roleName == '') {
+					toastr.warning("请填写角色名字");
+					return false;
+				}
+
+				//组装角色权限数据
+				var permission = {};
+				var operations = {};
+				$('.tree-selected').each( function (idx,item) {
+					let that = $(item);
+					let  dataCode = that.attr("data-code");
+					if(dataCode.indexOf('-')<0){ //菜单
+						permission[dataCode] = []
+					}else{ //操作
+						opArr = dataCode.split("-");
+						permission[opArr[0]].push(opArr[1]);
+					}
+				});
+
+				var ajax_data = {
+                    'roleId' : roleId,
+					'name' : $roleName,
+					'menu_permission' : JSON.stringify(permission)
+                };
+
+				$.ajax({
+					type : "POST",
+					url : "/admin/permissionmanage/modifyrole",
+					data : ajax_data,
+					dataType: "json",
+					//请求成功
+					success : function(result) {
+                        console.log(result);
+						if ( result.Code == 000 ){
+                            toastr.success(result.Message);
+
+                            setTimeout(function () {
+                                location.href = "/admin/permissionmanage/showrolelist"
+                            },2000);	
+                            
+						}else{
+                            toastr.error(result.Message);
+                        }
+					},
+					//请求失败，包含具体的错误信息
+					error : function(e){
+						toastr.error("系统繁忙，请稍候再试");
+					}
+				});
+
+
+			}
+            
+		$(function(){
+			$("#menu-tree li").on("click",function(e){
+				
+				var $obj = $(e.currentTarget);
+
+				if (myTree.isFolder($obj)) {
+					if(myTree.isSelect($obj)) {
+						myTree.fclose($obj)
+					} else {
+						myTree.fopen($obj)
+					}
+				} else {
+					if(myTree.isSelect($obj)) {
+						myTree.close($obj)
+					} else {
+						myTree.open($obj)
+					}
+				}
+				return false
+			})
+
+		});
+		</script>

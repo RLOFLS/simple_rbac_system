@@ -1,0 +1,212 @@
+<script src="/static/admin/js/jquery.pagination.js"></script>
+<script type="text/javascript">
+    //权限按钮控制
+     var noOperations = JSON.parse('{{.noOperations}}');
+    deleteNoPermissionButton();
+    
+    var staffId = '{{.staffId}}';
+    var currentPage = 1;
+    var dataList = [];
+    $('.m-style').pagination({
+                    pageCount:0,
+                    current: 1,
+                    prevContent: "上一页",
+                    nextContent: "下一页",
+                    jump: true,
+                    callback: function (api) {
+                        console.log(api.getCurrent())
+                        getList(api.getCurrent() )
+                    }
+    });
+
+    //获取列表
+    $(function(){
+        getList(1 )
+    });
+
+    function getList(page =1 ) {
+        currentPage = page;
+        $.ajax({
+            type : "POST",
+            url : "/admin/officeapprove/getshowlist",
+            data : { "page" : page },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+                console.log(result);
+                if ( result.Code == 000 ){
+                  if(result.Data.length ==  0) {
+                    $("#list-body").html('<tr ><td colspan="8" class="center" style="color: dimgray">暂无预约数据</td></tr> ');
+                  } else { //有数据
+                    dataList =  result.Data;
+                    var list = '';
+                    for (let index = 0; index < result.Data.length; index++) {
+                        console.log(11111);
+                        let item = result.Data[index];
+                        list += '<tr>';
+                        list += '    <td class="center">'+item['Id']+'</td>';
+                        list += '    <td class="center">'+item['OfficeName']+'</td>';
+                        list += '    <td class="center">'+item['StartTime']+'～'+item['EndTime']+'</td>';
+                        list += '    <td class="center">'+item['StaffName']+'</td>';
+                        list += '    <td class="center">'+item['ApproveStaffName']+'</td>';
+                        if (item['ApproveTime']) {
+                            list += '    <td class="center">'+item['ApproveTime']+'</td>';
+                        }else{
+                            list += '    <td class="center">/</td>';
+                        }
+                        switch(item['Status']) {
+                            case 'cancel':
+                                list += '<td class="center"><span class="label label-sm label-warning arrowed-in-right arrowed">已取消</span></td>';
+                                break;
+                            case 'close':
+                                list += '<td class="center"><span class="label label-sm label-danger arrowed-in-right arrowed">已关闭</span></td>';
+                                break;
+                            default:
+                                if ( new Date(item['StartTime']).getTime() > new Date().getTime()) {
+                                    list += '<td class="center"><span class="label label-sm label-info arrowed-in-right arrowed">已预约</span></td>';
+                                } else if (new Date(item['EndTime']).getTime() < new Date().getTime()) {
+                                    list += '<td class="center"><span class="label label-sm arrowed-in-right arrowed">已过期</span></td>';
+                                } else if (new Date(item['StartTime']).getTime() < new Date().getTime() && new Date(item['EndTime']).getTime() > new Date().getTime()){
+                                    list += '<td class="center"><span class="label label-sm label-success arrowed-in-right arrowed">使用中</span></td>';
+                                } else {
+                                    list += '<td class="center"><span class="label label-sm arrowed-in-right arrowed">未知</span></td>';
+                                }
+                                break;
+                        }
+                        
+                        list += '    <td class="center">';
+                        list += '        <button class="btn btn-white btn-info btn-round" onclick="showDetail('+index+')">';
+                        list += '            <i class="ace-icon fa fa-eye bigger-110 blue"></i>';
+                        list += '            查看详情';
+                        list += '        </button>';
+                        switch(item['Status']) {
+                            case 'cancel':  case 'close':
+                                break;
+                            case 'pending':
+                                if ( new Date(item['StartTime']).getTime() > new Date().getTime() && item['ApproveStaffId'] == staffId) {
+                                    list += '        <button class="btn btn-white btn-danger btn-round permission-close" onclick="closeOffice(\''+item['Id']+'\')">';
+                                    list += '                <i class="ace-icon fa fa-ban bigger-110 red"></i>';
+                                    list += '                关闭预约';
+                                    list += '        </button>';
+                                } 
+                                break;
+                            default:
+                                
+                                break;
+                        }
+                        list += '    </td>';
+                        list += '</tr>';
+                        
+                    }
+                   // console.log(list);
+                    $("#list-body").html(list);
+
+                    $('.m-style').pagination({
+                        pageCount:result.CountPage,
+                        current:page,
+                        prevContent: "上一页",
+                        nextContent: "下一页",
+                        jump: true,
+                        callback: function (api) {
+                            console.log(api.getCurrent())
+                            getList(api.getCurrent() );
+                        }
+                    });
+                  }
+
+                    //权限按钮控制
+                    deleteNoPermissionButton(); 
+
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+
+    }
+    //查看详情
+    function showDetail(idx){
+        let item = dataList[idx];
+        console.log(item);
+        $("#show-type").html(item['OfficeName']);
+        var status_str = ''
+        switch(item['Status']) {
+            case 'cancel':
+            status_str= '<span class="label label-sm label-warning arrowed-in-right arrowed">已取消</span>';
+                break;
+            case 'close':
+            status_str= '<span class="label label-sm label-danger arrowed-in-right arrowed">已关闭</span>';
+                break;
+            default:
+                if ( new Date(item['StartTime']).getTime() > new Date().getTime()) {
+                    status_str= '<span class="label label-sm label-info arrowed-in-right arrowed">已预约</span>';
+                } else if (new Date(item['EndTime']).getTime() < new Date().getTime()) {
+                    status_str= '<span class="label label-sm arrowed-in-right arrowed">已过期</span>';
+                } else if (new Date(item['StartTime']).getTime() < new Date().getTime() && new Date(item['EndTime']).getTime() > new Date().getTime()){
+                    status_str= '<span class="label label-sm label-success arrowed-in-right arrowed">使用中</span>';
+                } else {
+                    status_str= '<span class="label label-sm arrowed-in-right arrowed">未知</span>';
+                }
+                break;
+            }
+        $("#show-status").html(status_str);
+        var time_str = item['StartTime']+' ~ '+item['EndTime'];
+        $("#show-apply-time").html(time_str);
+        $("#show-apply-reason").html(item['ApplyReason']);
+        $("#show-applyer").html(item['StaffName']);
+        $("#show-approver").html(item['ApproveStaffName']);
+        $("#show-approve-reason").html(item['ApproveReason'] ? item['ApproveReason']: '/');
+
+        $("#showDetail").modal("show")
+    }
+
+    var close_id = '';
+    function closeOffice(id){
+        close_id = id;
+        $("#closeModal").modal("show");
+    }
+
+    function confirmClose(){
+        if(close_id == '') {
+            toastr.warning("请选择关闭的预约")
+            return false
+        }
+
+        var approve_reason = $("#close-reason").val();
+        if (!approve_reason){
+            toastr.warning("请填写关闭理由")
+            return false;
+        }
+
+        $.ajax({
+            type : "POST",
+            url : "/admin/officeapprove/close",
+            data : { "id" : close_id, "approve_reason":approve_reason },
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+                close_id = '';
+                $("#close-reason").val('');
+                $("#rejectModal").modal("hide");
+                if ( result.Code == 000 ){
+                    toastr.success(result.Message);
+                    setTimeout(function () {
+                        location.reload(); 
+                    },2000);	
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                $("#code").modal("hide");
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+    }
+
+</script>

@@ -1,0 +1,150 @@
+
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon green"></i>
+								<a href="/admin/jump/welcome">Home</a>
+                            </li>
+                            <li>
+                                    <a href="/admin/staffmanage/showlist">员工管理</a>
+                                </li>
+							<li class="active">添加员工</li>
+						</ul><!-- /.breadcrumb -->
+
+					</div>
+
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+                                <!-- PAGE CONTENT BEGINS -->
+                                <div class="page-header">
+                                        <h1>
+                                            添加员工
+                                            <!-- <small>
+                                                <i class="ace-icon fa fa-angle-double-right"></i>
+                                                Common form elements and layouts
+                                            </small> -->
+                                        </h1>
+                                    </div>
+                                <div class="row">
+                                        <div class="col-xs-12">
+                                            <form class="form-horizontal" role="form">
+													<div class="form-group">
+                                                        <label class="col-sm-3 control-label no-padding-right" for="staff_id"> 员工编号： </label>				
+                                                        <div class="col-sm-9">
+                                                            <input type="number" id="staff_id" placeholder="员工编号" class="col-xs-2">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="staff_name"> 密码： </label>				
+                                                            <div class="col-sm-9">
+                                                                <input type="password" id="staff_password" placeholder="密码" class="col-xs-4">
+                                                            </div>
+                                                        </div>
+													<div class="form-group">
+                                                        <label class="col-sm-3 control-label no-padding-right" for="staff_name"> 姓名： </label>				
+                                                        <div class="col-sm-9">
+                                                            <input type="text" id="staff_name" placeholder="姓名" class="col-xs-2">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label no-padding-right"> 性别： </label>				
+                                                        <div class="col-sm-9">
+                                                            <div class="control-group">
+                                                                <div class="radio">
+                                                                <label>
+                                                                        <input type="radio" id="staff_gender1" checked name="form-field-radio" class="ace staff_gender" value="1"><span class="lbl">男</span>
+                                                                </label>
+                                                            </div>
+                                                            <div class="radio">
+                                                                    <label>
+                                                                            <input type="radio"  id="staff_gender2" name="form-field-radio"   class="ace staff_gender" value="0"><span class="lbl">女</span>
+                                                                    </label>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label no-padding-right" for="staff_phone"> 手机号码： </label>				
+                                                        <div class="col-sm-9">
+                                                            <input type="text" id="staff_phone" placeholder="手机号码" class="col-xs-3">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                            <label class="col-sm-3 control-label no-padding-right" for="staff_address"> 地址： </label>				
+                                                            <div class="col-sm-9">
+                                                                <input type="text" id="staff_address" placeholder="地址" class="col-xs-5">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                                <label class="col-sm-3 control-label no-padding-right" > 邮箱： </label>				
+                                                                <div class="col-sm-9">
+                                                                    <input type="email" id="staff_email" placeholder="邮箱" class="col-xs-5">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                    <label class="col-sm-3 control-label no-padding-right"> 头衔： </label>				
+                                                                    <div class="col-sm-9">
+                                                                        <input type="text" id="staff_title" placeholder="工程师" class="col-xs-5">
+                                                                    </div>
+                                                                </div>
+                                                            <div class="form-group">
+                                                                    <label class="col-sm-3 control-label no-padding-right"> 角色： </label>				
+                                                                    <div class="col-xs-3">
+                                                                            <select class="form-control">
+                                                                                {{range .roleInfo}}
+                                                                                <option value="{{.Id}}">{{.Name}}</option>
+                                                                                {{end}}
+                                                                       
+                                                                            </select>
+                                                                    </div>
+                                                                </div>
+                                                        <div class="form-group">
+                                                                <label class="col-sm-3 control-label no-padding-right"> 是否为审核人： </label>				
+                                                                <div class="col-sm-9">
+                                                                    <div class="control-group">
+                                                                         <div class="radio">
+                                                                        <label>
+                                                                                <input type="radio" id="staff_approver" name="form-field-radio2" class="ace staff_approver" value="1"><span class="lbl">是</span>
+                                                                        </label>
+                                                                        </div>
+                                                                        <div class="radio">
+                                                                                <label>
+                                                                                        <input type="radio" checked  id="staff_approver2" name="form-field-radio2"   class="ace staff_approver" value="0"><span class="lbl">否</span>
+                                                                                </label>
+                                                                        </div>
+                                                                    </div>
+                                                                   
+                                                                </div>
+                                                            </div>
+													<div class="clearfix form-actions" style="padding-left: 10%;">
+															<div class="col-md-offset-3 col-md-9">
+																	<button type="button" class="btn btn-default btn-default btn-white btn-round" onclick="goBack()">
+																			<i class="ace-icon fa fa-times bigger-125"></i>返回
+																		</button>
+																&nbsp; &nbsp; &nbsp;
+																<button type="button"  class="btn btn-default btn-primary btn-white btn-round" onclick="addStaff()">
+																		<i class="ace-icon fa fa-check bigger-125"></i>	添加
+																	</button>
+															</div>
+														</div>
+                                            </form>     
+                                </div>
+                                    
+							
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+            
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+		<!-- basic scripts -->

@@ -1,0 +1,77 @@
+
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon green"></i>
+								<a href="/admin/jump/welcome">Home</a>
+							</li>
+							<li class="active">权限管理</li>
+						</ul><!-- /.breadcrumb -->
+
+					</div>
+
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+                                <!-- PAGE CONTENT BEGINS -->
+                                <div class="row">
+                                        <div class="col-xs-12">
+                                                <h3 class="header smaller lighter blue">角色列表 
+                                                    <button class="btn btn-white btn-info btn-round permission-add" style="float: right" onclick="addRole()">
+                                                        <i class="ace-icon glyphicon glyphicon-plus bigger-110 blue"></i>
+                                                        添加角色
+                                                    </button></h3>
+                                            <table id="role-table" class="table  table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th  class="center">角色名称</th>
+                                                        <th  class="center">添加时间</th>
+                                                        <th  class="center">操作</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id = "list-body">
+                                                  
+                         
+                                                    <tr ><td colspan="3" class="center" style="color: dimgray">暂无角色数据</td></tr>
+                                                </tbody>
+                                            
+                                            </table>
+                                        </div><!-- /.span -->
+                                    </div>
+							
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+        
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+        <div id="deleteModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-sm" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header" style="background-color: #EFF3F8; padding: 7px;">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title"><i class="ace-icon fa fa-exclamation-triangle red"></i><span class="red">删除角色</span></h4>
+                    </div>
+                    <div class="modal-body">
+                      <p style="color: dimgray;"> 确认要删除角色么？</p>
+                    </div>
+                    <div class="modal-footer" style="padding-bottom: 7px; padding-top: 7px;">
+                      <button class="btn btn-white btn-default btn-bold" data-dismiss="modal">
+                            <i class="ace-icon fa fa-times "></i>
+                          取消
+                        </button> 
+                        <input type="hidden" id="delId" value="">
+                      <button type="button" class="btn btn-white btn-danger  btn-bold" onclick="confirmDel()"> <i class="ace-icon glyphicon glyphicon-ok"></i>确认</button>
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+		<!-- basic scripts -->

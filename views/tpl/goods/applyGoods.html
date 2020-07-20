@@ -1,0 +1,100 @@
+<!-- page specific plugin scripts -->
+		<!-- <script src="/static/admin/js/moment.min.js"></script> -->
+		<script src="/static/admin/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="/static/admin/js/bootstrap-datetimepicker.zh.js"></script>
+	
+		<!-- inline scripts related to this page -->
+        <script type="text/javascript">
+        var goodsInfo = JSON.parse('{{.selectorJson}}')
+        console.log(goodsInfo);
+            //$("input[name='form-field-radio']:checked").val()
+            //$("option:checked").val()        
+            //模板弹框说明
+            $(".f-type div").hover(function() {
+                    let l1 = $(this).outerWidth();
+                    let l2 = $(this).prev().outerWidth()
+                    $(".rule-popup-box").css("left",l1+l2)
+                    $(".rule-popup-box").show();
+                }, function() {
+                    $(".rule-popup-box").hide();
+            });
+            function leaveChange(){
+                let id = $(".f-type option:checked").val();
+                for (let index = 0; index < goodsInfo.length; index++) {
+                    let element = goodsInfo[index];
+                    if(id == element.Id) {
+                        $(".con").html(element.Description);
+                        break;
+                    }
+                    
+                }
+            }
+
+           
+            //返回
+			function goBack(){
+				location.href = "/admin/goodsapply/showlist"
+			}
+
+			//添加角色
+			function applyGoods(){
+                
+                var goods_id = $(".f-type option:checked").val();
+                var goods_name = $(".f-type option:checked").html();
+
+                if( !goods_id || !goods_name) {
+                    toastr.warning("请选择假期申请类型")
+                    return false
+                }
+
+                var approve_id = $(".f-approve option:checked").val()
+                var approve_name = $(".f-approve option:checked").html()
+                if( !approve_id || !approve_name) {
+                    toastr.warning("请选择审批人")
+                    return false
+                }
+
+                var apply_reason = $("#f-reason").val();
+                if(!apply_reason) {
+                    toastr.warning("请填写申请原因")
+                    return false
+                }
+
+				//数据
+				var ajax_data = {
+                    'goods_id' : goods_id,
+                    'goods_name' : goods_name,
+                    'approve_staff_id' : approve_id,
+                    'approve_staff_name' : approve_name,
+                    'apply_reason' : apply_reason,
+				};
+
+				$.ajax({
+					type : "POST",
+					url : "/admin/goodsapply/apply",
+					data : ajax_data,
+					dataType: "json",
+					//请求成功
+					success : function(result) {
+                        console.log(result);
+						if ( result.Code == 000 ){
+                            toastr.success(result.Message);
+
+                            setTimeout(function () {
+                                location.href = "/admin/goodsapply/showlist"
+                            },2000);	
+                            
+						}else{
+                            toastr.error(result.Message);
+                        }
+					},
+					//请求失败，包含具体的错误信息
+					error : function(e){
+						toastr.error("系统繁忙，请稍候再试");
+					}
+				});
+
+
+			}
+            
+		</script>

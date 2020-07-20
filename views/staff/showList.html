@@ -1,0 +1,204 @@
+
+			<div class="main-content">
+				<div class="main-content-inner">
+					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+						<ul class="breadcrumb">
+							<li>
+								<i class="ace-icon fa fa-home home-icon green"></i>
+								<a href="/admin/jump/welcome">Home</a>
+							</li>
+							<li class="active">员工管理</li>
+						</ul><!-- /.breadcrumb -->
+
+					</div>
+
+					<div class="page-content">
+						<div class="row">
+							<div class="col-xs-12">
+                                <!-- PAGE CONTENT BEGINS -->
+                                <div class="row">
+                                        <div class="col-xs-12">
+                                                <h3 class="header smaller lighter blue">员工列表 
+                                                    <button class="btn btn-white btn-info btn-round permission-add" style="float: right" onclick="addStaff()">
+                                                        <i class="ace-icon glyphicon glyphicon-plus bigger-110 blue"></i>
+                                                        添加员工
+                                                    </button></h3>
+                                            <table id="role-table" class="table  table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th  class="center">员工编号</th>
+                                                        <th  class="center">姓名</th>
+                                                        <th  class="center">头衔</th>
+                                                        <th  class="center">电话</th>
+                                                        <th class="center">角色</th>
+                                                        <th  class="center">冻结状态</th>
+                                                        <th class="center">审核人</th>
+                                                        <th class="center">操作</th>
+                                                    </tr>
+                                                </thead>
+    
+                                                <tbody id = "list-body">
+                                                  
+                         
+                                                    <tr ><td colspan="8" class="center" style="color: dimgray">暂无员工数据</td></tr>
+                                                </tbody>
+                                            </table>
+                                            <div class="m-style" id="m-style">
+
+                                            </div>
+                                        </div><!-- /.span -->
+                                    </div>
+							
+								<!-- PAGE CONTENT ENDS -->
+							</div><!-- /.col -->
+						</div><!-- /.row -->
+					</div><!-- /.page-content -->
+				</div>
+			</div><!-- /.main-content -->
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+        <div id="deleteModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-sm" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header" style="background-color: #EFF3F8; padding: 7px;">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title"><i class="ace-icon fa fa-exclamation-triangle red"></i><span class="red">删除员工</span></h4>
+                    </div>
+                    <div class="modal-body">
+                      <p style="color: dimgray;"> 确认要删除员工么？</p>
+                    </div>
+                    <div class="modal-footer" style="padding-bottom: 7px; padding-top: 7px;">
+                      <button class="btn btn-white btn-default btn-round" data-dismiss="modal">
+                            <i class="ace-icon fa fa-times "></i>
+                          取消
+                        </button> 
+                        <input type="hidden" id="delId" value="">
+                      <button type="button" class="btn btn-white btn-danger  btn-round" onclick="confirmDel()"> <i class="ace-icon glyphicon glyphicon-ok"></i>确认</button>
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+        <!-- basic scripts -->
+        <!--修改角色-->
+        <div id="modifyRoleModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-sm" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header" style="background-color: #EFF3F8; padding: 7px;">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title"><i class="ace-icon fa fa-pencil green"></i><span class="green">修改角色</span></h4>
+                    </div>
+                    <div class="modal-body">
+                            <form class="form-horizontal" role="form">
+                                <div class="form-group">
+                                        <label class="col-sm-3 control-label no-padding-right"> 角色： </label>	
+                                        <div class="col-xs-7">
+                                                <select class="form-control modifyclass">
+                                            
+                                           
+                                                </select>
+                                        </div>
+                                    </div>
+                       </form>
+                           
+                    </div>
+                    <div class="modal-footer" style="padding-bottom: 7px; padding-top: 7px;">
+                      <button class="btn btn-white btn-default btn-round" data-dismiss="modal">
+                            <i class="ace-icon fa fa-times "></i>
+                          取消
+                        </button> 
+                      <button type="button" class="btn btn-white btn-primary  btn-round" onclick="confirmModifyRole()"> 
+                        <i class="ace-icon  fa fa-check "></i>确认
+                    </button>
+                    </div>
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+        <!--查看详情-->
+        <div class="modal fade" id="showDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header"  style="background-color: #EFF3F8; padding: 7px;">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">员工详情</h4>
+                    </div>
+                    <div class="modal-body">
+                            <div class="profile-user-info profile-user-info-striped">
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 员工编号</div>
+
+                                        <div class="profile-info-value">
+                                            <span class="editable editable-click" id="show-id"></span>
+                                        </div>
+                                    </div>
+                                    <div class="profile-info-row">
+                                            <div class="profile-info-name"> 姓名</div>
+    
+                                            <div class="profile-info-value">
+                                                <span class="editable editable-click" id="show-name"></span>
+                                            </div>
+                                        </div>
+                                        <div class="profile-info-row">
+                                                <div class="profile-info-name"> 头衔</div>
+        
+                                                <div class="profile-info-value">
+                                                    <span class="editable editable-click" id="show-title"></span>
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                    <div class="profile-info-name"> 角色</div>
+            
+                                                    <div class="profile-info-value">
+                                                        <span class="editable editable-click" id="show-role"></span>
+                                                    </div>
+                                                </div>
+                                    <div class="profile-info-row">
+                                            <div class="profile-info-name"> 性别</div>
+    
+                                            <div class="profile-info-value">
+                                                <span class="editable editable-click" id="show-gender"></span>
+                                            </div>
+                                        </div>
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 地址 </div>
+
+                                        <div class="profile-info-value">
+                                            <i class="fa fa-map-marker light-orange bigger-110"></i>
+                                            <span class="editable editable-click" id="show-address"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 电话 </div>
+
+                                        <div class="profile-info-value">
+                                            <span class="editable editable-click" id="show-phone"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 邮箱 </div>
+
+                                        <div class="profile-info-value">
+                                            <span class="editable editable-click" id="show-email"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="profile-info-row">
+                                        <div class="profile-info-name"> 添加时间 </div>
+
+                                        <div class="profile-info-value">
+                                            <span class="editable editable-click" id="show-add-time"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                    </div>
+                    <div class="modal-footer"  style="padding-bottom: 7px; padding-top: 7px;">
+                      <button type="button" class="btn  btn-white btn-default btn-round" data-dismiss="modal"><i class="ace-icon fa fa-times"></i>关闭</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+	

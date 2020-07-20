@@ -1,0 +1,116 @@
+<!-- page specific plugin scripts -->
+		<!-- <script src="/static/admin/js/moment.min.js"></script> -->
+		<script src="/static/admin/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="/static/admin/js/bootstrap-datetimepicker.zh.js"></script>
+
+		<!-- inline scripts related to this page -->
+        <script type="text/javascript">
+            //$("input[name='form-field-radio']:checked").val()
+            //$("option:checked").val()        
+        
+            $('#start-time,#end-time').datetimepicker({ 
+                format: "yyyy-MM-dd hh:mm:00",
+                 language: 'zh',
+                 todayHighlight: true,
+                 timePickerIncrement: 30, //时间的增量，单位为分钟
+                 timePickerSeconds: true,
+                 initialDate:new Date(),
+                //endDate后的日期都是灰色，不可选
+                startDate: new Date(),
+            })
+            // $('#end-time').datetimepicker({ 
+            //     format: "yyyy-MM-dd hh:mm:00",
+            //      language: 'zh',
+            //      todayHighlight: true,
+            //      timePickerIncrement: 30, //时间的增量，单位为分钟
+            //      initialDate:new Date(),
+            //     //endDate后的日期都是灰色，不可选
+            //     startDate: new Date(),
+			// })
+           
+            //返回
+			function goBack(){
+				location.href = "/admin/officeapply/showlist"
+			}
+
+			//添加
+			function applyOffice(){
+                
+                var office_id = $(".f-type option:checked").val();
+                var office_name = $(".f-type option:checked").html();
+
+                if( !office_id || !office_name) {
+                    toastr.warning("请选择预约办公室")
+                    return false
+                }
+
+                var start_time = $("#start-time input").val();
+                if ( !start_time) {
+                    toastr.warning("请选择开始时间")
+                    return false
+                }
+
+                var end_time = $("#end-time input").val()
+                if(!end_time){
+                    toastr.warning("请选择结束时间")
+                    return false
+                }
+
+                if(new Date(start_time).getTime() >= new Date(end_time).getTime()) {
+                    toastr.warning("结束时间要大于开始时间")
+                    return false
+                }
+
+                var approve_id = $(".f-approve option:checked").val()
+                var approve_name = $(".f-approve option:checked").html()
+                if( !approve_id || !approve_name) {
+                    toastr.warning("请选择审批人")
+                    return false
+                }
+
+                var apply_reason = $("#f-reason").val();
+                if(!apply_reason) {
+                    toastr.warning("请填写预约原因")
+                    return false
+                }
+
+				//数据
+				var ajax_data = {
+                    'office_id' : office_id,
+                    'office_name' : office_name,
+                    'start_time' : start_time,
+                    'end_time' : end_time,
+                    'approve_staff_id' : approve_id,
+                    'approve_staff_name' : approve_name,
+                    'apply_reason' : apply_reason,
+				};
+
+				$.ajax({
+					type : "POST",
+					url : "/admin/officeapply/apply",
+					data : ajax_data,
+					dataType: "json",
+					//请求成功
+					success : function(result) {
+                        console.log(result);
+						if ( result.Code == 000 ){
+                            toastr.success(result.Message);
+
+                            setTimeout(function () {
+                                location.href = "/admin/officeapply/showlist"
+                            },2000);	
+                            
+						}else{
+                            toastr.error(result.Message);
+                        }
+					},
+					//请求失败，包含具体的错误信息
+					error : function(e){
+						toastr.error("系统繁忙，请稍候再试");
+					}
+				});
+
+
+			}
+            
+		</script>

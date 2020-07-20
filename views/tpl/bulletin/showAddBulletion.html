@@ -1,0 +1,108 @@
+
+
+<!-- page specific plugin scripts -->
+<script src="/static/admin/js/jquery-ui.custom.min.js"></script>
+<script src="/static/admin/js/jquery.ui.touch-punch.min.js"></script>
+<script src="/static/admin/js/markdown.min.js"></script>
+<script src="/static/admin/js/bootstrap-markdown.min.js"></script>
+<script src="/static/admin/js/jquery.hotkeys.index.min.js"></script>
+<script src="/static/admin/js/bootstrap-wysiwyg.min.js"></script>
+<script src="/static/admin/js/bootbox.js"></script>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript">
+    //$("input[name='form-field-radio']:checked").val()
+    //$("option:checked").val()
+    jQuery(function($){
+
+        $('#editor2').css({'height':'500px'}).ace_wysiwyg({
+            toolbar_place: function(toolbar) {
+                return $(this).closest('.widget-box')
+                    .find('.widget-header').prepend(toolbar)
+                    .find('.wysiwyg-toolbar').addClass('inline');
+            },
+            toolbar:
+            [
+                'bold',
+                {name:'italic' , title:'Change Title!', icon: 'ace-icon fa fa-leaf'},
+                'strikethrough',
+                null,
+                'insertunorderedlist',
+                'insertorderedlist',
+                null,
+                'justifyleft',
+                'justifycenter',
+                'justifyright'
+            ],
+            speech_button: false
+        });
+
+        $('[data-toggle="buttons"] .btn').on('click', function(e){
+            var target = $(this).find('input[type=radio]');
+            var which = parseInt(target.val());
+            var toolbar = $('#editor1').prev().get(0);
+            if(which >= 1 && which <= 4) {
+                toolbar.className = toolbar.className.replace(/wysiwyg\-style(1|2)/g , '');
+                if(which == 1) $(toolbar).addClass('wysiwyg-style1');
+                else if(which == 2) $(toolbar).addClass('wysiwyg-style2');
+                if(which == 4) {
+                    $(toolbar).find('.btn-group > .btn').addClass('btn-white btn-round');
+                } else $(toolbar).find('.btn-group > .btn-white').removeClass('btn-white btn-round');
+            }
+        });
+});
+    //返回
+    function goBack(){
+        location.href = "/admin/bulletinmanage/showlist"
+    }
+
+    //添加角色
+    function addBulletion(){
+        
+        var title = $("#f-title").val();
+        if (! title) {
+            toastr.warning("请填写公告标题");
+            return false;
+        }
+        
+        var content = $("#editor2").html();
+        if(!content) {
+            toastr.warning("请填写公告内容");
+            return false
+        }
+
+        //数据
+        var ajax_data = {
+            'title' : title,
+            'content' : content,
+        };
+
+        $.ajax({
+            type : "POST",
+            url : "/admin/bulletinmanage/addbulletion",
+            data : ajax_data,
+            dataType: "json",
+            //请求成功
+            success : function(result) {
+                console.log(result);
+                if ( result.Code == 000 ){
+                    toastr.success(result.Message);
+
+                    setTimeout(function () {
+                        location.href = "/admin/bulletinmanage/showlist"
+                    },2000);	
+                    
+                }else{
+                    toastr.error(result.Message);
+                }
+            },
+            //请求失败，包含具体的错误信息
+            error : function(e){
+                toastr.error("系统繁忙，请稍候再试");
+            }
+        });
+
+
+    }
+    
+</script>
