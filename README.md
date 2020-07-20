@@ -4,8 +4,9 @@
 
 ### Run
 
--doc/ initial sql
--In the root directory `go run main`
+- doc/ initial sql
+- In the root directory `go run main`
+- http://localhost:8080  account：000000 password：123456
 
 ### Screenshot
 
