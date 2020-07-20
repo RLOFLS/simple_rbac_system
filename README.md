@@ -9,6 +9,6 @@
 
 ### Screenshot
 
-  [Login](/doc/show1.png)
-  [Approval](/doc/show2.png)
-  [Permission](/doc/show3.png)
+  ![Login](/doc/show1.png)
+  ![Approval](/doc/show2.png)
+  ![Permission](/doc/show3.png)
