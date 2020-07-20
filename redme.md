@@ -1,14 +1,14 @@
-### 简介
+### Introduction
 
-- 基于 beego 开发 的简易 RBAC 系统
+-Simple RBAC system based on beego development
 
-### 运行
+### Run
 
-- doc/ 初始sql
-- 在根目录 `go run main`
+-doc/ initial sql
+-In the root directory `go run main`
 
-### 截图
+### Screenshot
 
- [登录](/doc/show1.png)
- [审批](/doc/show2.png)
- [权限](/doc/show3.png)
+  [Login](/doc/show1.png)
+  [Approval](/doc/show2.png)
+  [Permission](/doc/show3.png)
